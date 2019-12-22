@@ -1,0 +1,7 @@
+/sandbox
+/ci
+# *.ts
+# !src/schematics/cypress/files/**/*.ts
+*.spec.ts
+*.spec.js
+jest.config.js

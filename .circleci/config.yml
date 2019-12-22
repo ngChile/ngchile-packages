@@ -1,0 +1,137 @@
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.5
+  jq: circleci/jq@1.9.0
+aliases:
+  set_git_credentials: &set_git_credentials
+    run: |
+        git config credential.helper 'cache --timeout=120'
+        git config user.email ngChile@circleci
+        git config user.name "ngChile Circle Ci Deployment Bot"
+  restore_cache: &restore_cache
+    restore_cache:
+      name: Restore Npm Package Cache
+      keys:
+        - v1-dependencies-{{ checksum "package.json" }}
+
+  save_cache: &save_cache
+    save_cache:
+      name: Save NPM modules cache
+      paths:
+        - ~/.npm
+        - ~/.cache
+      key: v1-dependencies-{{ checksum "package.json" }}
+
+  store_dist: &store_dist
+    save_cache:
+      name: Save dist folder
+      paths:
+        - ./
+      key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+
+  restore_dist: &restore_dist
+    restore_cache:
+      name: Restore built dist folder
+      keys:
+        - v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+
+  install_node_modules: &install_node_modules
+    run:
+      name: Install local dependencies
+      command: npm ci
+
+  show_current_branch: &show_current_branch
+    run:
+      name: Show current branch
+      command: echo ${CIRCLE_BRANCH}
+jobs:
+  unit-tests:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/lib/packages/cypress-cucumber-schematics
+    steps:
+      - checkout:
+          path: ~/lib
+      - <<: *show_current_branch
+      #- <<: *restore_cache
+      - <<: *install_node_modules
+      #- <<: *save_cache
+      - run:
+          name: Running unit tests
+          command: npm run test:ci
+      - codecov/upload:
+          file: ./coverage/lcov.info
+      - store_artifacts:
+          path: ./test-results/junit
+      - store_artifacts:
+          path: ./coverage
+      - store_test_results:
+          path: ./test-results
+  e2e:
+    docker:
+      - image: cypress/base:10
+        environment:
+          TERM: xterm
+    working_directory: ~/lib/packages/cypress-cucumber-schematics
+    steps:
+      - checkout:
+          path: ~/lib
+      - <<: *show_current_branch
+      #- <<: *restore_cache
+      - <<: *install_node_modules
+      #- <<: *save_cache
+      - run:
+          name: Install jq
+          command: |
+            apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -yq install jq
+      - run:
+          name: Install Angular CLI
+          command: |
+            npm install -g npm@latest && npm install -g @angular/cli@latest
+      - run:
+          name: Running e2e test running schematic on sandbox app
+          command: bash ./ci/run-schematic
+  publish:
+    docker:
+      # circleci/node:10 needs sudo for run global packages
+      - image: circleci/node:10
+    working_directory: ~/lib/packages/cypress-cucumber-schematics
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "a7:af:f2:47:72:a1:69:7d:d2:9f:fe:c1:81:98:41:88"
+      - checkout:
+          path: ~/lib
+      - <<: *set_git_credentials
+      - <<: *show_current_branch
+      #- <<: *restore_cache
+      - <<: *install_node_modules
+      #- <<: *save_cache
+      - run:
+          name: Install Lerna CLI
+          command: |
+            sudo npm install -g npm@latest && sudo npm install -g lerna@latest
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$AUTH_TOKEN" > ~/lib/.npmrc
+      - run:
+          name: Building Package
+          command: npm run build
+      - run:
+          name: Publish package
+          command: |
+            cd ~/lib && sudo lerna publish from-package --yes --force-publish
+workflows:
+  version: 2
+  angular-chile-pipeline:
+    jobs:
+      - unit-tests
+      - e2e
+      - publish:
+          requires:
+            - unit-tests
+            - e2e
+          filters:
+            branches:
+              only:
+                - master
