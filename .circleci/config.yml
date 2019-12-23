@@ -98,7 +98,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "a7:af:f2:47:72:a1:69:7d:d2:9f:fe:c1:81:98:41:88"
+            - "f8:10:aa:a7:83:34:01:06:0e:b9:ba:89:ee:58:23:b6"
       - checkout:
           path: ~/lib
       - <<: *set_git_credentials
@@ -128,7 +128,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "a7:af:f2:47:72:a1:69:7d:d2:9f:fe:c1:81:98:41:88"
+            - "f8:10:aa:a7:83:34:01:06:0e:b9:ba:89:ee:58:23:b6"
       - checkout
       # - <<: *restore_npm_cache
       - <<: *install_node_modules
