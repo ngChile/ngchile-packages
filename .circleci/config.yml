@@ -81,7 +81,7 @@ jobs:
       - <<: *install_node_modules
       #- <<: *save_cache
       - run:
-          name: Install jq
+          name: Install jq #Using a non CircleCI's docker image the ORB for jq does not works
           command: |
             apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -yq install jq
       - run:
@@ -93,7 +93,6 @@ jobs:
           command: bash ./ci/run-schematic
   publish:
     docker:
-      # circleci/node:10 needs sudo for run global packages
       - image: circleci/node:10
     working_directory: ~/lib/packages/cypress-cucumber-schematics
     steps:
@@ -108,6 +107,7 @@ jobs:
       - <<: *install_node_modules
       #- <<: *save_cache
       - run:
+          # circleci/node:10 needs sudo for run global packages
           name: Install Lerna CLI
           command: |
             sudo npm install -g npm@latest && sudo npm install -g lerna@latest
@@ -121,6 +121,22 @@ jobs:
           name: Publish package
           command: |
             cd ~/lib && sudo lerna publish from-package --yes --force-publish
+  update-repository:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/lib
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "a7:af:f2:47:72:a1:69:7d:d2:9f:fe:c1:81:98:41:88"
+      - checkout
+      # - <<: *restore_npm_cache
+      - <<: *install_node_modules
+      # - <<: *save_npm_cache
+      - <<: *set_git_credentials
+      - run:
+          name: Updating repository
+          command: ./.circleci/update-contributors
 workflows:
   version: 2
   angular-chile-pipeline:
@@ -131,6 +147,13 @@ workflows:
           requires:
             - unit-tests
             - e2e
+          filters:
+            branches:
+              only:
+                - master
+      - update-repository:
+          requires:
+            - publish
           filters:
             branches:
               only:

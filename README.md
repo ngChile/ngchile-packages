@@ -12,3 +12,18 @@ At **Angular Chile** we want to contribute to OSS in every way possible. That's 
 ## cypress-cucumber-schematics
 ![cypress-cucumber-schematics-logo](/docs/cypress-cucumber-schematics-logo.png)  
 Enables [Cypress](https://cypress.io) as a default E2E tool using [Cucumber](https://cucumber.io/) definitions with [Gherkins](https://cucumber.io/docs/gherkin/reference/). Removes [Protractor](https://www.protractortest.org/#/) and generates scaffolding for ussing cypress in a easy way :sparkles:.
+
+## Autores
+
+- [Gonzalo Pincheira](https://github.com/gpincheiraa)
+- [Nicolás Ávila](https://github.com/nicoavila)
+
+### Contribuidores
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+## Contacto
+
+- Siguenos en Twitter: [https://twitter.com/angularChile](https://twitter.com/angularChile)
+- Únete al slack de Comunidad Angular: [angular-chile.slack.com](angular-chile.slack.com)
