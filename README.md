@@ -15,9 +15,6 @@ Enables [Cypress](https://cypress.io) as a default E2E tool using [Cucumber](htt
 
 ### Documentation
 1. [How to use](docs/cypress-cucumber-schematics/01_how-to-use.md)
-2. [Getting started](docs/cypress-cucumber-schematics/02_getting-started.md)
-3. [Documentation](docs/cypress-cucumber-schematics/03_documentation.md)
-4. [Contributing](docs/cypress-cucumber-schematics/04_contributing.md)
 
 ## Authors
 - [Gonzalo Pincheira](https://github.com/gpincheiraa)
