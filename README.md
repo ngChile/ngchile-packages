@@ -11,15 +11,19 @@ At **Angular Chile** we want to contribute to OSS in every way possible. That's 
 
 ## cypress-cucumber-schematics
 ![cypress-cucumber-schematics-logo](/docs/cypress-cucumber-schematics-logo.png)  
-Enables [Cypress](https://cypress.io) as a default E2E tool using [Cucumber](https://cucumber.io/) definitions with [Gherkins](https://cucumber.io/docs/gherkin/reference/). Removes [Protractor](https://www.protractortest.org/#/) and generates scaffolding for ussing cypress in a easy way :sparkles:.
+Enables [Cypress](https://cypress.io) as a default E2E tool using [Cucumber](https://cucumber.io/) definitions with [Gherkins](https://cucumber.io/docs/gherkin/reference/). Removes [Protractor](https://www.protractortest.org/#/) and generates scaffolding for ussing Cypress in a easy way :sparkles:.
 
-## Autores
+### Documentation
+1. [How to use](docs/cypress-cucumber-schematics/01_how-to-use.md)
+2. [Getting started](docs/cypress-cucumber-schematics/02_getting-started.md)
+3. [Documentation](docs/cypress-cucumber-schematics/03_documentation.md)
+4. [Contributing](docs/cypress-cucumber-schematics/04_contributing.md)
 
+## Authors
 - [Gonzalo Pincheira](https://github.com/gpincheiraa)
 - [Nicolás Ávila](https://github.com/nicoavila)
 
-### Contribuidores
-
+### Contributors
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
@@ -34,7 +38,6 @@ Enables [Cypress](https://cypress.io) as a default E2E tool using [Cucumber](htt
 <!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-## Contacto
-
-- Siguenos en Twitter: [https://twitter.com/angularChile](https://twitter.com/angularChile)
-- Únete al slack de Comunidad Angular: [angular-chile.slack.com](angular-chile.slack.com)
+## Contact
+- Follow us on Twitter: [https://twitter.com/angularChile](https://twitter.com/angularChile)
+- Join to our Slack: [angular-chile.slack.com](angular-chile.slack.com)
