@@ -11,7 +11,7 @@ aliases:
     run: 
       name: Install Lerna CLI and node modules
       command: |
-        sudo npm install -g npm@latest && sudo npm install -g lerna@latest && sudo lerna exec 'npm ci'
+        sudo npm install -g npm@latest && sudo npm install -g lerna@latest && sudo lerna exec 'NG_CLI_ANALYTICS=ci sudo npm ci'
   show_current_branch: &show_current_branch
     run:
       name: Show current branch
