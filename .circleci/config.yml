@@ -1,6 +1,5 @@
 version: 2.1
 orbs:
-  codecov: codecov/codecov@1.0.5
   jq: circleci/jq@1.9.0
 aliases:
   set_git_credentials: &set_git_credentials
@@ -8,38 +7,11 @@ aliases:
         git config credential.helper 'cache --timeout=120'
         git config user.email ngChile@circleci
         git config user.name "ngChile Circle Ci Deployment Bot"
-  restore_cache: &restore_cache
-    restore_cache:
-      name: Restore Npm Package Cache
-      keys:
-        - v1-dependencies-{{ checksum "package.json" }}
-
-  save_cache: &save_cache
-    save_cache:
-      name: Save NPM modules cache
-      paths:
-        - ~/.npm
-        - ~/.cache
-      key: v1-dependencies-{{ checksum "package.json" }}
-
-  store_dist: &store_dist
-    save_cache:
-      name: Save dist folder
-      paths:
-        - ./
-      key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-
-  restore_dist: &restore_dist
-    restore_cache:
-      name: Restore built dist folder
-      keys:
-        - v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-
-  install_node_modules: &install_node_modules
-    run:
-      name: Install local dependencies
-      command: npm ci
-
+  install_lerna_globally: &install_lerna_globally
+    run: 
+      name: Install Lerna CLI and node modules
+      command: |
+        sudo npm install -g npm@latest && sudo npm install -g lerna@latest && sudo lerna exec 'npm ci'
   show_current_branch: &show_current_branch
     run:
       name: Show current branch
@@ -48,79 +20,56 @@ jobs:
   unit-tests:
     docker:
       - image: circleci/node:10
-    working_directory: ~/lib/packages/cypress-cucumber-schematics
+    working_directory: ~/lib
     steps:
-      - checkout:
-          path: ~/lib
+      - checkout
       - <<: *show_current_branch
-      #- <<: *restore_cache
-      - <<: *install_node_modules
-      #- <<: *save_cache
+      - <<: *install_lerna_globally
       - run:
           name: Running unit tests
-          command: npm run test:ci
-      - codecov/upload:
-          file: ./coverage/lcov.info
-      - store_artifacts:
-          path: ./test-results/junit
-      - store_artifacts:
-          path: ./coverage
-      - store_test_results:
-          path: ./test-results
+          command: sudo lerna exec 'npm run test:ci -- --colors'
   e2e:
     docker:
       - image: cypress/base:10
         environment:
           TERM: xterm
-    working_directory: ~/lib/packages/cypress-cucumber-schematics
+    working_directory: ~/lib
     steps:
-      - checkout:
-          path: ~/lib
+      - checkout
       - <<: *show_current_branch
-      #- <<: *restore_cache
-      - <<: *install_node_modules
-      #- <<: *save_cache
       - run:
           name: Install jq #Using a non CircleCI's docker image the ORB for jq does not works
           command: |
             apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -yq install jq
       - run:
-          name: Install Angular CLI
+          name: Install Angular CLI and Lerna (without sudo in Cypress image)
           command: |
-            npm install -g npm@latest && npm install -g @angular/cli@latest
+            npm install -g npm@latest && npm install -g @angular/cli@latest lerna@latest && lerna exec 'npm ci'
       - run:
           name: Running e2e test running schematic on sandbox app
-          command: bash ./ci/run-schematic
+          command: lerna run e2e
   publish:
     docker:
       - image: circleci/node:10
-    working_directory: ~/lib/packages/cypress-cucumber-schematics
+    working_directory: ~/lib
     steps:
       - add_ssh_keys:
           fingerprints:
             - "f8:10:aa:a7:83:34:01:06:0e:b9:ba:89:ee:58:23:b6"
-      - checkout:
-          path: ~/lib
+      - checkout
       - <<: *set_git_credentials
       - <<: *show_current_branch
-      #- <<: *restore_cache
-      - <<: *install_node_modules
-      #- <<: *save_cache
-      - run:
-          # circleci/node:10 needs sudo for run global packages
-          name: Install Lerna CLI
-          command: |
-            sudo npm install -g npm@latest && sudo npm install -g lerna@latest
+      # circleci/node:10 needs sudo for run global packages
+      - <<: *install_lerna_globally
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$AUTH_TOKEN" > ~/lib/.npmrc
       - run:
           name: Building Package
-          command: npm run build
+          command: sudo lerna run build
       - run:
           name: Publish package
-          command: |
-            cd ~/lib && sudo lerna publish from-package --yes --force-publish
+          command: sudo lerna publish from-package --yes --force-publish
   update-repository:
     docker:
       - image: circleci/node:10
@@ -130,10 +79,10 @@ jobs:
           fingerprints:
             - "f8:10:aa:a7:83:34:01:06:0e:b9:ba:89:ee:58:23:b6"
       - checkout
-      # - <<: *restore_npm_cache
-      - <<: *install_node_modules
-      # - <<: *save_npm_cache
       - <<: *set_git_credentials
+      - run:
+          name: Install dependencies
+          command: npm ci
       - run:
           name: Updating repository
           command: ./.circleci/update-contributors
