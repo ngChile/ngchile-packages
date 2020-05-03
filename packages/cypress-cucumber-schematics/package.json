@@ -1,6 +1,6 @@
 {
   "name": "@ngchile/cypress-cucumber-schematics",
-  "version": "1.0.0-rc.5",
+  "version": "1.0.0-rc.6",
   "description": "Schematics for create boilerplate and configurations for run cypress as e2e testing runner ",
   "author": "Gonzalo Pincheira <g.pincheira.a@gmail.com>",
   "license": "MIT",
@@ -25,23 +25,23 @@
     "access": "public"
   },
   "dependencies": {
-    "@angular-devkit/architect": "^0.803.14",
-    "@angular-devkit/core": "^8.3.20",
-    "@angular-devkit/schematics": "^8.3.20",
+    "@angular-devkit/architect": "^0.901.4",
+    "@angular-devkit/core": "^9.1.4",
+    "@angular-devkit/schematics": "^9.1.4",
     "cypress": "^4.0.0"
   },
   "peerDependencies": {
     "rxjs": "^6.0.0"
   },
   "devDependencies": {
-    "@angular/cli": "^8.3.21",
-    "@schematics/angular": "^8.3.20",
-    "@types/jest": "^24.0.23",
-    "@types/node": "^12.12.14",
+    "@angular/cli": "^9.1.4",
+    "@schematics/angular": "^9.1.4",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.13.4",
     "cpr": "^3.0.1",
-    "jest": "^24.7.1",
-    "jest-junit": "^8.0.0",
-    "ts-jest": "^24.2.0",
-    "typescript": ">=3.4.0 <3.6.0"
+    "jest": "^25.5.4",
+    "jest-junit": "^10.0.0",
+    "ts-jest": "^25.4.0",
+    "typescript": "^3.8.3"
   }
 }
