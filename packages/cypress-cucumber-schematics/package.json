@@ -1,6 +1,6 @@
 {
   "name": "@ngchile/cypress-cucumber-schematics",
-  "version": "1.0.0-rc.6",
+  "version": "1.0.0-rc.7",
   "description": "Schematics for create boilerplate and configurations for run cypress as e2e testing runner ",
   "author": "Gonzalo Pincheira <g.pincheira.a@gmail.com>",
   "license": "MIT",
@@ -28,7 +28,7 @@
     "@angular-devkit/architect": "^0.901.4",
     "@angular-devkit/core": "^9.1.4",
     "@angular-devkit/schematics": "^9.1.4",
-    "cypress": "^4.0.0"
+    "cypress": "^5.0.0"
   },
   "peerDependencies": {
     "rxjs": "^6.0.0"
