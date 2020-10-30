@@ -38,7 +38,7 @@ aliases:
   install_node_modules: &install_node_modules
     run:
       name: Install local dependencies
-      command: npm ci
+      command: npm install
 
   show_current_branch: &show_current_branch
     run:
