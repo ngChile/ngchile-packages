@@ -17,7 +17,7 @@ npm run build
 
 npm link
 cd ./sandbox
-npm ci && npm list --depth=0
+npm install && npm list --depth=0
 
 echo "link $PACKAGE_NAME after install dependencies"
 npm link $PACKAGE_NAME
