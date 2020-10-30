@@ -16,22 +16,33 @@ export enum CypressRunningMode {
     Browser = 'browser'
 }
 
+// TODO: Make a better interface using cypress types
 export interface CypressBuilderOptions extends JsonObject {
     devServerTarget?: string;
     mode?: string;
     baseUrl?: string;
-    host?: string;
+
+    // Keep updated based in https://docs.cypress.io/guides/guides/module-api.html#Options
+    browser?: string;
     ciBuildId?: string;
+    //The "config" option it is mandatory and added in the function executeCypress
+    //config?: Record<string, string>;
+    configFile?: string | boolean;
     env?: Record<string, string>;
     group?: string;
+    headed?: boolean;
+    headless?: boolean;
     key?: string;
+    exit?: boolean;
     parallel?: boolean;
     port?: number;
     project?: string;
+    quiet?: boolean;
     record?: boolean;
     reporter?: string;
-    reporterPath?: string;
+    reporterOptions?: string;
     spec?: string;
+    tag?: string;
 }
 
 export default createBuilder<CypressBuilderOptions>(run);
@@ -86,16 +97,24 @@ function executeCypress(
         config: {
             baseUrl: options.baseUrl
         },
+        /* TODO find better way to handle this */
+        ...(options.browser ? { browser: options.browser } : {}),
         ...(options.ciBuildId ? { ciBuildId: options.ciBuildId } : {}),
         ...(options.configFile ? { configFile: options.configFile } : {}),
+        ...(options.headed ? { headed: options.headed } : {}),
+        ...(options.headless ? { headless: options.headless } : {}),
         ...(options.env ? { env: options.env } : {}),
         ...(options.group ? { group: options.group } : {}),
         ...(options.key ? { key: options.key } : {}),
         ...(options.parallel ? { parallel: options.parallel } : {}),
+        ...(options.port ? { port: options.port } : {}),
         ...(options.project ? { project: options.project } : {}),
+        ...(options.quiet ? { quiet: options.quiet } : {}),
         ...(options.record ? { record: options.record } : {}),
         ...(options.reporter ? { reporter: options.reporter } : {}),
-        ...(options.spec ? { spec: options.spec } : {})
+        ...(options.reporterOptions ? { reporterOptions: options.reporterOptions } : {}),
+        ...(options.spec ? { spec: options.spec } : {}),
+        ...(options.tag ? { tag: options.tag } : {})
     };
 
     return from<any>(
