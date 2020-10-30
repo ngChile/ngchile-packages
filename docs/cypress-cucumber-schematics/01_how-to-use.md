@@ -2,7 +2,7 @@
 `cypress-cucumber-schematics` is a schematic package for enabling [Cypress](https://www.cypress.io/) E2E testing using [Cucumber](https://cucumber.io/docs/cucumber/) with [Gherkins](https://cucumber.io/docs/gherkin/), providing a better way to develop apps in a [BDD](https://en.wikipedia.org/wiki/Behavior-driven_development) (Behavior Driven Development) way.
 
 ## Using in your application
-You can use this schematic in every stage of your application: initial creation of a project or a production-ready Angular app. Simply just execute `ng add @ngChile/cypress-cucumber-schematics` in the folder of your project and you're done!
+You can use this schematic in every stage of your application: initial creation of a project or a production-ready Angular app. Simply just execute `ng add @ngchile/cypress-cucumber-schematics` in the folder of your project and you're done!
 
 [![asciicast](https://asciinema.org/a/290098.svg)](https://asciinema.org/a/290098)
 
