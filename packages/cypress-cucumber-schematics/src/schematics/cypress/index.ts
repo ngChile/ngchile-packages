@@ -23,7 +23,7 @@ const { version } = require('../../../package.json');
 
 export default function (options: any): Rule {
     return (tree: Tree, context: SchematicContext) => {
-        context.logger.info(`Running Cypress builder version ${version}`)
+        context.logger.info(`Running Cypress Cucumber schematics version ${version}`)
         return chain([
             removeProtractorFiles(),
             addCypressCucumberDependencies(),
