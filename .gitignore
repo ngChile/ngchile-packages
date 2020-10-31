@@ -29,6 +29,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+sandbox
 
 # System Files
 .DS_Store

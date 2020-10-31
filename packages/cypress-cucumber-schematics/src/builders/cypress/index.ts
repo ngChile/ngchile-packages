@@ -10,6 +10,7 @@ import { Observable, of, noop, from } from 'rxjs';
 import { concatMap, map, take, tap, catchError } from 'rxjs/operators';
 
 const cypress = require('cypress');
+const { version } = require('../../../package.json');
 
 export enum CypressRunningMode {
     Console = 'console',
@@ -52,6 +53,8 @@ function run(
     context: BuilderContext
 ): Observable<BuilderOutput> {
     const isConsoleMode = options.mode === CypressRunningMode.Console;
+
+    context.logger.info(`Running Cypress builder version ${version}`)
 
     return (options.devServerTarget
         ? startDevServer(options.devServerTarget, true, context)
@@ -116,6 +119,8 @@ function executeCypress(
         ...(options.spec ? { spec: options.spec } : {}),
         ...(options.tag ? { tag: options.tag } : {})
     };
+
+    context.logger.info(`Run cypress in mode ${options.mode} using the following options for Cypress: ${JSON.stringify(additionalCypressConfig)}`);
 
     return from<any>(
         options.mode === CypressRunningMode.Console

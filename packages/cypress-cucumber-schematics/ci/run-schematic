@@ -8,23 +8,30 @@ PACKAGE_NAME=$(jq -r ".name" < package.json)
 
 if [[ ! -d $SANDBOX_PATH ]]; then 
     mkdir $SANDBOX_PATH
-    ng new $SANDBOX_APP_NAME --directory $SANDBOX_PATH --routing=true --style=scss
+    ng new $SANDBOX_APP_NAME --directory $SANDBOX_PATH --routing=true --style=scss --skipGit
 fi
-
-git checkout HEAD -- sandbox && git clean -f -d sandbox
 
 npm run build
 
+echo "*****************************************************"
+echo "   link $PACKAGE_NAME      "
+echo "*****************************************************"
 npm link
 cd ./sandbox
 npm install && npm list --depth=0
 
-echo "link $PACKAGE_NAME after install dependencies"
+echo "*****************************************************"
+echo "   link $PACKAGE_NAME in sandbox project             "
+echo "*****************************************************"
 npm link $PACKAGE_NAME
 
+echo "*****************************************************"
 echo "Running ng add for $PACKAGE_NAME"
-ng add $PACKAGE_NAME
+echo "*****************************************************"
+ng g $PACKAGE_NAME:ng-add
 
+echo "******************************************************************"
+echo "   force link $PACKAGE_NAME in sandbox project after run tests    "
+echo "******************************************************************"
+npm link $PACKAGE_NAME
 npm run e2e:ci
-
-cd .. && git checkout HEAD -- sandbox  && git clean -f -d sandbox
