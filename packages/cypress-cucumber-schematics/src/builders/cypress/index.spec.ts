@@ -1,4 +1,5 @@
-import { Architect,  scheduleTargetAndForget, targetFromTargetString } from '@angular-devkit/architect';
+import { Architect } from '@angular-devkit/architect';
+import * as devkit from '@angular-devkit/architect';
 import { TestingArchitectHost } from '@angular-devkit/architect/testing/';
 import { schema } from '@angular-devkit/core';
 import { normalize } from 'path';
@@ -12,6 +13,12 @@ jest.mock('cypress', () => ({
     open: jest.fn(),
 }));
 
+jest.mock('@angular-devkit/architect', () => ({
+    ...(jest.requireActual('@angular-devkit/architect')),
+    targetFromTargetString: jest.fn(),
+    scheduleTargetAndForget: jest.fn(),
+}))
+
 describe('Integration Test: Ngx Devkit Cypress Builder', () => {
     let architect: Architect;
     let architectHost: TestingArchitectHost;
@@ -23,6 +30,7 @@ describe('Integration Test: Ngx Devkit Cypress Builder', () => {
             API_URL: 'http://localhost:8080/api/v1/users'
         }
     };
+    const { scheduleTargetAndForget, targetFromTargetString } = devkit;
 
     beforeEach(async () => {
         const registry = new schema.CoreSchemaRegistry();
@@ -40,8 +48,9 @@ describe('Integration Test: Ngx Devkit Cypress Builder', () => {
 
         cypress.run.mockReset();
         cypress.open.mockReset();
-        (targetFromTargetString as any) = jest
-            .fn()
+
+        // jest.spyOn(devkit, 'targetFromTargetString').mockReturnValue(null);
+        (targetFromTargetString as any)
             .mockReturnValue(null);
     });
 
@@ -49,8 +58,7 @@ describe('Integration Test: Ngx Devkit Cypress Builder', () => {
         //Arrange values for tests
         const testsResult = { totalFailed: 0 };
         cypress.run.mockReturnValue(Promise.resolve(testsResult));
-        (scheduleTargetAndForget as any) = jest
-            .fn()
+        (scheduleTargetAndForget as any)
             .mockReturnValue(
                 of({ success: true })
             );
@@ -83,8 +91,7 @@ describe('Integration Test: Ngx Devkit Cypress Builder', () => {
     it('should use cypress run in console mode and run failed if are at least 1 failed test', async () => {
         const testsResult = { totalFailed: 1 };
         cypress.run.mockReturnValue(Promise.resolve(testsResult));
-        (scheduleTargetAndForget as any) = jest
-            .fn()
+        (scheduleTargetAndForget as any)
             .mockReturnValue(
                 of({ success: true })
             );
@@ -113,8 +120,7 @@ describe('Integration Test: Ngx Devkit Cypress Builder', () => {
     });
 
     it('should not run cypress if run scheduleTargetAndForget failing in console mode', async () => {
-        (scheduleTargetAndForget as any) = jest
-            .fn()
+        (scheduleTargetAndForget as any)
             .mockReturnValue(
                 of({ success: false })
             );
@@ -135,8 +141,7 @@ describe('Integration Test: Ngx Devkit Cypress Builder', () => {
     });
 
     it('should open cypress', async () => {
-        (scheduleTargetAndForget as any) = jest
-            .fn()
+        (scheduleTargetAndForget as any)
             .mockReturnValue(
                 of({ success: true })
             );
@@ -167,13 +172,13 @@ describe('Integration Test: Ngx Devkit Cypress Builder', () => {
     });
 
     it('should open cypress even if run scheduleTargetAndForget failing in console mode', async () => {
-        (scheduleTargetAndForget as any) = jest
-            .fn()
+        (scheduleTargetAndForget as any)
             .mockReturnValue(
                 of({ success: false })
             );
         const cypressNewOptions = {
             ...cypressOptions,
+            browser: 'edge',
             ciBuildId: 'cypress-builder',
             configFile: 'e2e/cypress.json',
             mode: 'browser',
@@ -211,8 +216,7 @@ describe('Integration Test: Ngx Devkit Cypress Builder', () => {
     });
 
     it('should catch error and set success to false if an error is throwed', async () => {
-        (scheduleTargetAndForget as any) = jest
-            .fn()
+        (scheduleTargetAndForget as any)
             .mockReturnValue(
                 throwError(new Error())
             );
@@ -265,4 +269,5 @@ describe('Integration Test: Ngx Devkit Cypress Builder', () => {
         });
         expect(scheduleTargetAndForget).not.toHaveBeenCalled();
     });
+
 });

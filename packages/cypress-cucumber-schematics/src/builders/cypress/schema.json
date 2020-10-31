@@ -16,14 +16,13 @@
       "description": "Run mode of Cypress. Valid value are 'console' and 'browser'",
       "default": "console"
     },
+    "browser": {
+      "type": "string",
+      "description": "Specify different browser to run tests in, either by name or by filesystem path"
+    },
     "baseUrl": {
       "type": "string",
       "description": "Base URL for Cypress to connect to."
-    },
-    "host": {
-      "type": "string",
-      "description": "Host to listen on.",
-      "default": "localhost"
     },
     "ciBuildId": {
       "type": "string",
@@ -41,17 +40,37 @@
       "type": "string",
       "description": "Group recorded tests together under a single run"
     },
+    "headed": {
+      "type": "boolean",
+      "description": "Displays the browser instead of running headlessly (default Firefox and Chromium-based browsers)"
+    },
+    "headless": {
+      "type": "boolean",
+      "description": "Hide the browser instead of running headed (defaults for Electron)"
+    },
     "key": {
       "type": "string",
       "description": "Specify your secret record key"
+    },
+    "exit": {
+      "type": "boolean",
+      "description": "Whether to close Cypress after all tests run"
     },
     "parallel": {
       "type": "boolean",
       "description": "Run recorded specs in parallel across multiple machines"
     },
+    "port": {
+      "type": "number",
+      "description": "Override default port"
+    },
     "project": {
       "type": "string",
       "description": "Path to a specific project"
+    },
+    "quiet": {
+      "type": "boolean",
+      "description": "If passed, Cypress output will not be printed to stdout. Only output from the configured Mocha reporter will print"
     },
     "record": {
       "type": "boolean",
@@ -61,9 +80,17 @@
       "type": "string",
       "description": "Specify a Mocha reporter or path to custom reporter"
     },
+    "reporterOptions": {
+      "type": "string",
+      "description": "Specify Mocha reporter options"
+    },
     "spec": {
       "type": "string",
       "description": "Specify the specs to run"
+    },
+    "tag": {
+      "type": "string",
+      "description": "Identify a run with a tag or tags"
     }
   },
   "additionalProperties": false

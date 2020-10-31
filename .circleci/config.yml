@@ -38,7 +38,7 @@ aliases:
   install_node_modules: &install_node_modules
     run:
       name: Install local dependencies
-      command: npm ci
+      command: npm install
 
   show_current_branch: &show_current_branch
     run:
@@ -47,7 +47,7 @@ aliases:
 jobs:
   unit-tests:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:12
     working_directory: ~/lib/packages/cypress-cucumber-schematics
     steps:
       - checkout:
@@ -69,7 +69,7 @@ jobs:
           path: ./test-results
   e2e:
     docker:
-      - image: cypress/base:10
+      - image: cypress/base:12
         environment:
           TERM: xterm
     working_directory: ~/lib/packages/cypress-cucumber-schematics
