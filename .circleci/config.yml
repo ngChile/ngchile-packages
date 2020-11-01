@@ -121,6 +121,9 @@ jobs:
           name: Publish package
           command: |
             cd ~/lib && sudo lerna publish from-package --yes --force-publish
+      - run:
+          name: Push new Tag to github
+          command: git status && git tag
   update-repository:
     docker:
       - image: circleci/node:10
