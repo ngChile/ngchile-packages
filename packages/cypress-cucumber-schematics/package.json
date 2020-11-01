@@ -29,7 +29,12 @@
     "@angular-devkit/core": "^10.2.0",
     "@angular-devkit/schematics": "^10.2.0",
     "@schematics/angular": "^10.2.0",
-    "cypress": "^5.0.0"
+    "cypress": "^5.0.0",
+    "dot-prop": "^6.0.0",
+    "kind-of": "^6.0.3",
+    "lodash": "^4.17.20",
+    "minimist": "^1.2.5",
+    "yargs-parser": "^20.2.3"
   },
   "peerDependencies": {
     "rxjs": "^6.6.3"
