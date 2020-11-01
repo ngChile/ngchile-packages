@@ -30,6 +30,7 @@ Enables [Cypress](https://cypress.io) as a default E2E tool using [Cucumber](htt
     <td align="center"><a href="https://github.com/gpincheiraa"><img src="https://avatars0.githubusercontent.com/u/5608336?v=4" width="100px;" alt=""/><br /><sub><b>gpincheiraa</b></sub></a><br /><a href="https://github.com/ngChile/ngchile-packages/commits?author=gpincheiraa" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/nicoavila"><img src="https://avatars0.githubusercontent.com/u/602639?v=4" width="100px;" alt=""/><br /><sub><b>nicoavila</b></sub></a><br /><a href="https://github.com/ngChile/ngchile-packages/commits?author=nicoavila" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/FDiskas"><img src="https://avatars2.githubusercontent.com/u/468006?v=4" width="100px;" alt=""/><br /><sub><b>FDiskas</b></sub></a><br /><a href="https://github.com/ngChile/ngchile-packages/commits?author=FDiskas" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/apps/dependabot"><img src="https://avatars0.githubusercontent.com/in/29110?v=4" width="100px;" alt=""/><br /><sub><b>dependabot[bot]</b></sub></a><br /><a href="https://github.com/ngChile/ngchile-packages/commits?author=dependabot[bot]" title="Code">💻</a></td>
   </tr>
 </table>
 
