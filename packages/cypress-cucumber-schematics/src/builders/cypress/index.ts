@@ -54,7 +54,9 @@ function run(
 ): Observable<BuilderOutput> {
     const isConsoleMode = options.mode === CypressRunningMode.Console;
 
-    context.logger.info(`Running Cypress builder version ${version}`)
+    context.logger.info(`
+        📄 Running Cypress builder version ${version}
+    `)
 
     return (options.devServerTarget
         ? startDevServer(options.devServerTarget, true, context)
@@ -96,31 +98,47 @@ function executeCypress(
     options: CypressBuilderOptions,
     context: BuilderContext
 ): Observable<BuilderOutput> {
+    //  Keep updated based in https://docs.cypress.io/guides/guides/module-api.html#Options
+    const cypressValidKeys = [
+        'browser',
+        'ciBuildId',
+        'configFile',
+        'headed',
+        'headless',
+        'env',
+        'group',
+        'key',
+        'parallel',
+        'port',
+        'project',
+        'quiet',
+        'record',
+        'reporter',
+        'reporterOptions',
+        'spec',
+        'tag',
+    ].reduce((cypressOptions, option) => {
+        //Cypress throws error when an invalid key is passed
+        return (options[option] || typeof options[option] === 'object'
+            ? { ...cypressOptions, [option]: options[option] } 
+            : { ...cypressOptions })
+    }, {});
     const additionalCypressConfig = {
         config: {
             baseUrl: options.baseUrl
         },
-        /* TODO find better way to handle this */
-        ...(options.browser ? { browser: options.browser } : {}),
-        ...(options.ciBuildId ? { ciBuildId: options.ciBuildId } : {}),
-        ...(options.configFile ? { configFile: options.configFile } : {}),
-        ...(options.headed ? { headed: options.headed } : {}),
-        ...(options.headless ? { headless: options.headless } : {}),
-        ...(options.env ? { env: options.env } : {}),
-        ...(options.group ? { group: options.group } : {}),
-        ...(options.key ? { key: options.key } : {}),
-        ...(options.parallel ? { parallel: options.parallel } : {}),
-        ...(options.port ? { port: options.port } : {}),
-        ...(options.project ? { project: options.project } : {}),
-        ...(options.quiet ? { quiet: options.quiet } : {}),
-        ...(options.record ? { record: options.record } : {}),
-        ...(options.reporter ? { reporter: options.reporter } : {}),
-        ...(options.reporterOptions ? { reporterOptions: options.reporterOptions } : {}),
-        ...(options.spec ? { spec: options.spec } : {}),
-        ...(options.tag ? { tag: options.tag } : {})
+        ...cypressValidKeys
     };
 
-    context.logger.info(`Run cypress in mode ${options.mode} using the following options for Cypress: ${JSON.stringify(additionalCypressConfig)}`);
+    context.logger.info(`
+👀  Run cypress in mode "${options.mode}" using the following options for Cypress: 
+${JSON.stringify(additionalCypressConfig, null, 4)}
+        
+📖 Check all the options available in the following link: 
+https://docs.cypress.io/guides/guides/module-api.html#Options
+
+and add these options in the angular.json section e2e in the architect configuration.
+    `);
 
     return from<any>(
         options.mode === CypressRunningMode.Console
