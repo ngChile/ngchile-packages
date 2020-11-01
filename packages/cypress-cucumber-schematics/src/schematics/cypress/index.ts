@@ -74,7 +74,7 @@ function addCypressCucumberDependencies(): Rule {
             }),
             tap(() => {
                 context.addTask(new NodePackageInstallTask());
-                context.logger.debug('✅️ All dependencies installed');
+                context.logger.info('✅️ All dependencies installed');
             })
         );
     };

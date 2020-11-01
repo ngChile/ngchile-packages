@@ -28,7 +28,7 @@ npm link $PACKAGE_NAME
 echo "*****************************************************"
 echo "Running ng add for $PACKAGE_NAME"
 echo "*****************************************************"
-ng g $PACKAGE_NAME:ng-add
+ng add $PACKAGE_NAME
 
 echo "******************************************************************"
 echo "   force link $PACKAGE_NAME in sandbox project after run tests    "
