@@ -1,6 +1,6 @@
 {
   "name": "@ngchile/cypress-cucumber-schematics",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "Schematics for create boilerplate and configurations for run cypress as e2e testing runner ",
   "author": "Gonzalo Pincheira <g.pincheira.a@gmail.com>",
   "license": "MIT",
