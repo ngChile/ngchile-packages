@@ -8,7 +8,7 @@ PACKAGE_NAME=$(jq -r ".name" < package.json)
 
 if [[ ! -d $SANDBOX_PATH ]]; then 
     mkdir $SANDBOX_PATH
-    ng new $SANDBOX_APP_NAME --directory $SANDBOX_PATH --routing=true --style=scss --skipGit
+    ng new $SANDBOX_APP_NAME --directory $SANDBOX_PATH --routing=true --style=scss --skip-git
 fi
 
 npm run build

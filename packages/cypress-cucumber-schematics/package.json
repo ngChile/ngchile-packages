@@ -31,9 +31,6 @@
     "@schematics/angular": "^11.2.6",
     "cypress": "^6.0.0"
   },
-  "peerDependencies": {
-    "rxjs": "^6.6.3"
-  },
   "devDependencies": {
     "@angular/cli": "^11.2.6",
     "@types/jest": "^26.0.15",
