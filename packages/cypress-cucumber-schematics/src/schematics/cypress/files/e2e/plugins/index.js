@@ -1,5 +1,5 @@
 //  const { addMatchImageSnapshotPlugin } = require('cypress-image-snapshot/plugin');
-const webpack = require('@cypress/webpack-preprocessor');
+const webpack = require('cypress-webpack-preprocessor-v5');
 
 module.exports = on => {
     const options = {
