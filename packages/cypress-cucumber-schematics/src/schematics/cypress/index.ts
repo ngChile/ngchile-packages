@@ -10,39 +10,37 @@ import {
     MergeStrategy,
 } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
-import { getWorkspace } from '@schematics/angular/utility/config';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 import { addPackageJsonDependency, NodeDependency, NodeDependencyType } from '@schematics/angular/utility/dependencies';
-
 import { join, normalize } from 'path';
-import { Observable, of } from 'rxjs';
 
 import { getLatestNodeVersion, NpmRegistryPackage } from './utils/npmjs';
-import { concatMap, map, tap } from 'rxjs/operators';
 
 const { version } = require('../../../package.json');
 
 export default function (options: any): Rule {
-    return (tree: Tree, context: SchematicContext) => {
+    return async (tree: Tree, context: SchematicContext) => {
         context.logger.info(`Running Cypress Cucumber schematics version ${version}`)
+        const workspace = await getWorkspace(tree);
+
         return chain([
-            removeProtractorFiles(),
+            removeProtractorFiles(workspace),
             addCypressCucumberDependencies(),
-            addCypressCucumberBoilerplate(),
-            addCypressBuilder(),
+            addCypressCucumberBoilerplate(workspace),
+            addCypressBuilder(workspace),
             addCypressCucumberCosmiconfig(),
-        ])(tree, context);
+        ]);
     };
 }
 
-function removeProtractorFiles(): Rule {
+function removeProtractorFiles(workspace): Rule {
     return (tree: Tree, context: SchematicContext) => {
-        const workspace = getWorkspace(tree);
-        const projectName = Object.keys(workspace['projects'])[0];
+        const projectName = workspace.extensions.defaultProject;
 
         context.logger.debug('Clean protractor files if exists');
 
         const targetFolder = join(
-            normalize(workspace['projects'][projectName]['root']),
+            normalize(workspace.projects.get(projectName).root),
             '/e2e'
         );
 
@@ -54,39 +52,43 @@ function removeProtractorFiles(): Rule {
 }
 
 function addCypressCucumberDependencies(): Rule {
-    return (tree: Tree, context: SchematicContext): Observable<Tree> => {
-        return of(
-            'cypress-cucumber-preprocessor',
-            '@cypress/webpack-preprocessor',
-            'ts-loader'
-        ).pipe(
-            concatMap(name => getLatestNodeVersion(name)),
-            map((npmRegistryPackage: NpmRegistryPackage) => {
-              const nodeDependency: NodeDependency = {
-                type: NodeDependencyType.Dev,
-                name: npmRegistryPackage.name,
-                version: npmRegistryPackage.version,
-                overwrite: false
-              };
-              addPackageJsonDependency(tree, nodeDependency);
-              context.logger.info(`✅️  Added ${npmRegistryPackage.name} dependency`);
-              return tree;
-            }),
-            tap(() => {
-                context.addTask(new NodePackageInstallTask());
-                context.logger.info('✅️ All dependencies installed');
-            })
-        );
+    return async (tree: Tree, context: SchematicContext) => {
+        try {
+            const dependencies = [
+                'cypress-cucumber-preprocessor',
+                '@cypress/webpack-preprocessor',
+                'ts-loader',
+            ];
+            const promises = dependencies.map((dependencyName) =>
+                getLatestNodeVersion(dependencyName)
+                    .then((npmRegistryPackage: NpmRegistryPackage) => {
+                        const nodeDependency: NodeDependency = {
+                            type: NodeDependencyType.Dev,
+                            name: npmRegistryPackage.name,
+                            version: npmRegistryPackage.version,
+                            overwrite: false
+                        };
+                        addPackageJsonDependency(tree, nodeDependency);
+                        context.logger.info(`✅️  Added ${npmRegistryPackage.name} dependency`);
+                    })
+            );
+    
+            await Promise.all(promises);
+    
+            context.addTask(new NodePackageInstallTask());
+            context.logger.info('✅️ All dependencies installed');
+        } catch (error) {
+            context.logger.error(`❌ Error in dependencies installed: ${error}`);
+        }
     };
 }
 
-function addCypressCucumberBoilerplate(): Rule {
+function addCypressCucumberBoilerplate(workspace): Rule {
     return (tree: Tree, context: SchematicContext) => {
-        const workspace = getWorkspace(tree);
-        const projectName = Object.keys(workspace['projects'])[0];
+        const projectName = workspace.extensions.defaultProject;
         const sourceFolder = './files';
         const targetFolder = join(
-            normalize(workspace['projects'][projectName]['root']),
+            normalize(workspace.projects.get(projectName).root),
         );
 
         context.logger.debug('Adding Cypress and Cucumber files');
@@ -102,11 +104,9 @@ function addCypressCucumberBoilerplate(): Rule {
     }
 }
 
-function addCypressBuilder(): Rule {
+function addCypressBuilder(workspace): Rule {
     return (tree: Tree, context: SchematicContext) => {
-        const workspace = getWorkspace(tree);
-        const projectName = Object.keys(workspace['projects'])[0];
-        const projectArchitectJson = workspace['projects'][projectName]['architect'];
+        const projectName = workspace.extensions.defaultProject;
         const cypressOpenJson = {
             builder: '@ngchile/cypress-cucumber-schematics:cypress',
             options: {
@@ -119,12 +119,13 @@ function addCypressBuilder(): Rule {
                 }
             }
         };
+        const angularJson = JSON.parse(tree.read('./angular.json').toString('utf-8'));
 
-        projectArchitectJson['e2e'] = cypressOpenJson as any;
+        angularJson['projects'][projectName]['architect']['e2e'] = cypressOpenJson;
 
         tree.overwrite(
             './angular.json',
-            JSON.stringify(workspace, null, 2)
+            JSON.stringify(angularJson, null, 2)
         );
         return tree;
     };

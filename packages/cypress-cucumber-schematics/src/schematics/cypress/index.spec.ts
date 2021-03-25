@@ -31,7 +31,7 @@ describe('my-component', () => {
 
         const e2eFiles = tree.files.filter(fileName => fileName.includes('e2e/'))
         const angularJson = JSON.parse(tree.readContent('./angular.json'));
-        const architectDefinition = angularJson['projects'][projectName]['architect'];
+        const architectDefinitionE2E = angularJson['projects'][projectName]['architect']['e2e'];
         const packageJson = JSON.parse(tree.readContent('./package.json'));
 
         expect(e2eFiles).toEqual([
@@ -44,7 +44,7 @@ describe('my-component', () => {
             `/${projectName}/e2e/support/index.ts`,
         ]);
         expect(tree.files).toContain(`/${projectName}/cypress.json`);
-        expect(architectDefinition['e2e']).toEqual({
+        expect(architectDefinitionE2E).toEqual({
             builder: '@ngchile/cypress-cucumber-schematics:cypress',
             options: {
                 devServerTarget: `${projectName}:serve`,
