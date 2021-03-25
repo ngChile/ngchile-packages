@@ -63,7 +63,7 @@ describe('my-component', () => {
         expect(Object.keys(packageJson['devDependencies'])).toEqual(
             expect.arrayContaining([
                 'cypress-cucumber-preprocessor',
-                '@cypress/webpack-preprocessor',
+                'cypress-webpack-preprocessor-v5',
                 'ts-loader'
             ])
         );

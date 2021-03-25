@@ -57,7 +57,7 @@ function addCypressCucumberDependencies(): Rule {
     return (tree: Tree, context: SchematicContext): Observable<Tree> => {
         return of(
             'cypress-cucumber-preprocessor',
-            '@cypress/webpack-preprocessor',
+            'cypress-webpack-preprocessor-v5',
             'ts-loader'
         ).pipe(
             concatMap(name => getLatestNodeVersion(name)),
