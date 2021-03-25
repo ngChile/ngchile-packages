@@ -29,10 +29,11 @@
     "@angular-devkit/core": "^10.2.0",
     "@angular-devkit/schematics": "^10.2.0",
     "@schematics/angular": "^10.2.0",
-    "cypress": "^5.0.0"
+    "cypress": "^6.0.0"
   },
   "peerDependencies": {
-    "rxjs": "^6.6.3"
+    "rxjs": "^6.6.3",
+    "webpack": "^4.18.1"
   },
   "devDependencies": {
     "@angular/cli": "^10.2.0",
